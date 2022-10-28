@@ -1,21 +1,22 @@
 import datetime as dt
 import os
+import re
 import sys
+from pprint import pp
+from urllib.error import HTTPError
+from wsgiref import validate
 
 import requests
 from dotenv import load_dotenv
 
 
-# API_KEY = open('api_key.txt', 'r').read()
 BASE_URL = 'http://api.openweathermap.org/data/2.5/weather?'
-CITY = sys.argv[1] #validate
-# CITY = 'London'
-print(f'1:{CITY}, 2:{sys.argv[0]}')
+CITY = sys.argv[1] #validate and could be more arguments
+
+print(f'\n1:{CITY}, 2:{sys.argv[0]}\n')
 
 def configure():
     load_dotenv()
-    # API_KEY = os.getenv('api_key')
-    # print(API_KEY)
 
 def kelvin_to_celsius_fahrenheit(kelvin):
     celsius = kelvin - 273.15
@@ -24,22 +25,28 @@ def kelvin_to_celsius_fahrenheit(kelvin):
 
 def main():
     configure()
-    # url = BASE_URL + 'q=' + CITY + '&APPID=dd3c88974a05a9da4c9a775c0049a127'
+    
     url = f'{BASE_URL}q={CITY}&APPID={os.getenv("api_key")}'
-    response = requests.get(url).json() #make a try exept block
 
-    print(f'\n{response}')
+    try:
+        response = requests.get(url) #make a try except block 
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print("Http Error:", err)
+        sys.exit('Try agin with Valid city.')
 
+    response = response.json()
+    pp(response, indent=4)
     description = response['weather'][0]['description']
     temp_kelvin = response['main']['temp']
     temp_celsius, temp_fahrenheit = kelvin_to_celsius_fahrenheit(temp_kelvin)
-    
-    print(f'\n{CITY}: {temp_celsius}°C / {temp_fahrenheit}°F \n{description}\n')
+    print(f'\n{CITY}: {temp_celsius}°C / {temp_fahrenheit}°F {description}\n')
 
-    # humidity, description, sunrise
+
+    # humidity, description, sunrise, datetune will be added to full end
 
     # todo
-    # make into functions, config, dotenv, init, comment code, requests
+    # comment code
 
 
 
