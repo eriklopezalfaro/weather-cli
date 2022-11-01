@@ -29,7 +29,7 @@ def main():
     url = f'{BASE_URL}q={CITY}&APPID={os.getenv("api_key")}'
 
     try:
-        response = requests.get(url) #make a try except block 
+        response = requests.get(url)
         response.raise_for_status()
     except requests.exceptions.HTTPError as err:
         print("Http Error:", err)
