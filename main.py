@@ -1,10 +1,8 @@
 import datetime as dt
 import os
-import re
 import sys
 from pprint import pp
-from urllib.error import HTTPError
-from wsgiref import validate
+
 
 import requests
 from dotenv import load_dotenv
@@ -16,7 +14,7 @@ CITY = sys.argv[1] #validate and could be more arguments
 print(f'\n1:{CITY}, 2:{sys.argv[0]}\n')
 
 def configure():
-    load_dotenv()
+    load_dotenv()  
 
 def kelvin_to_celsius_fahrenheit(kelvin):
     celsius = kelvin - 273.15
